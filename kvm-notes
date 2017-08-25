@@ -1,0 +1,62 @@
+#lsmod | grep kvm
+#modprobe kvm.kvm-amd
+#lscpu
+-packages
+#yum install qemu-kvm libvirtd virt-install virt-manager or #yum group install virtualization
+#systemctl start/enable libvirt
+#virt-host-validate
+#virsh nodeinfo
+#virsh domcapabilities
+-add user to admin group
+#cat /etc/poolkit/rules.d/50-default
+#usermod -G wheel mohamed 
+
+#ll /var/lib/libvirt/{images,qemu}
+----------------------------------------------
+	using virt-install:windows gust vm install
+#qemu-img create -f raw -o size=10G /var/lib/libvirt/qemu/windows.img %create a virtual storage
+#virt-install --name windows1 --ram 1024 --disk path=/var/lib/libvirt/qemu/windows.img -vcpus 1 --os-type=Windows --network bridge=virb0 --graphics vnc,port=5999 --console pty,target_type=serial --cdrom /path/to/iso-image.iso
+--------------------------------------------------
+	disk images:using virt-builder
+-to autmate vms deployment
+#yum install libguestfs-tools-c
+http://libguestfs.org/
+#cd /etc/lib/libvirt/qemu
+#virt-builder centos-7.3 --root-password password:12345  #download a centos 7.3 template
+#virt-install --name centos7 --ram 1024 --disk path=/var/lib/libvirt/qemu/centos-7.3.img -vcpus 1 --import
+note: u can use this command to automate your infra using bash or puppet or ansible..etc
+---------------------------------------------
+	using virs and virt-viewer
+#virsh list --all
+#virsh start/shutdown/reboot/suspend/resume name-of-vm
+#virsh list  %only running
+#virt-viewer centos %to open in guo
+---------------------------------------------
+		-network and storage
+	-libvirt and virtual networking
+1-created an isolated virtual network
+2-#virsh net-list --all
+3-#virsh net-dumpxml isoloated
+4-#ll /etc/libvirt/qemu/networks/
+5-#virsh net-start isolated
+-----------------------------------------------
+	creating disk image
+#cd /var/lib/libvirt/images
+#qemu-img create -f raw addondisk1.img 1G
+#virsh attach-disk vm-name --source /var/lib/libvirt/images/addondisk1.img --target vdc --persistent
+-------------------------------------------------
+	storage pools,backup and recovery
+-we have internal and external snapshot
+-internal a specfiic format (qcow) image
+#virsh snapshot-create vm-name  %error
+ solution:
+ 	1-convert vm to qcow(convert image format)
+
+#qemu-img convert -f raw -O qcow2 fedora.img fedora.qcow2
+#virsh snapshot-list vm
+
+#virsh snapshot-revert vm --snapshotname "random no of list"
+
+
+
+
